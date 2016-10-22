@@ -1,0 +1,129 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="bookit-app">
+  <template>
+    <style>
+      #header-text {
+        font-size: 20px;
+        font-weight: 400;
+        cursor: default;
+      }
+
+      #page-content {
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+      }
+
+      #cards-container {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        padding: 4% 4% 2% 4%;
+      }
+    </style>
+
+    <paper-drawer-panel force-narrow>
+      <paper-header-panel drawer></paper-header-panel>
+      <paper-header-panel main>
+        <paper-toolbar>
+          <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+          <div id="header-text" class="flex">FindIT</div>
+        </paper-toolbar>
+
+        <div id="page-content">
+          <div id="cards-container">
+            <h3>Libraries</h3>
+            <paper-card heading="Baillieu" image="https://placeholdit.imgix.net/~text?txtsize=14&txt=200%C3%97200&w=200&h=200" elevation="1" animated-shadow="true">
+              <div class="card-content">
+                <span>I'm a card</span>
+              </div>
+              <div class="card-actions">
+                <paper-button>List</paper-button>
+                <paper-button>Map</paper-button>
+              </div>
+            </paper-card>
+
+            <paper-card heading="Giblin Eunson" image="https://placeholdit.imgix.net/~text?txtsize=14&txt=200%C3%97200&w=200&h=200" elevation="1" animated-shadow="true">
+              <div class="card-content">
+                <span>I'm a card</span>
+              </div>
+              <div class="card-actions">
+                <paper-button>List</paper-button>
+                <paper-button>Map</paper-button>
+              </div>
+            </paper-card>
+
+            <paper-card heading="ERC" image="https://placeholdit.imgix.net/~text?txtsize=14&txt=200%C3%97200&w=200&h=200" elevation="1" animated-shadow="true">
+              <div class="card-content">
+                <span>I'm a card</span>
+              </div>
+              <div class="card-actions">
+                <paper-button>List</paper-button>
+                <paper-button>Map</paper-button>
+              </div>
+            </paper-card>
+          </div>
+          <div id="cards-container">
+            <h3>Actions</h3>
+
+            <paper-card heading="Baillieu" image="https://placeholdit.imgix.net/~text?txtsize=14&txt=200%C3%97200&w=200&h=200" elevation="1" animated-shadow="true">
+              <div class="card-content">
+                <span>I'm a card</span>
+              </div>
+              <div class="card-actions">
+                <paper-button>List</paper-button>
+                <paper-button>Map</paper-button>
+              </div>
+            </paper-card>
+
+            <paper-card heading="Giblin Eunson" image="https://placeholdit.imgix.net/~text?txtsize=14&txt=200%C3%97200&w=200&h=200" elevation="1" animated-shadow="true">
+              <div class="card-content">
+                <span>I'm a card</span>
+              </div>
+              <div class="card-actions">
+                <paper-button>List</paper-button>
+                <paper-button>Map</paper-button>
+              </div>
+            </paper-card>
+
+            <paper-card heading="ERC" image="https://placeholdit.imgix.net/~text?txtsize=14&txt=200%C3%97200&w=200&h=200" elevation="1" animated-shadow="true">
+              <div class="card-content">
+                <span>I'm a card</span>
+              </div>
+              <div class="card-actions">
+                <paper-button>List</paper-button>
+                <paper-button>Map</paper-button>
+              </div>
+            </paper-card>
+          </div>
+        </div>
+      </paper-header-panel>
+    </paper-drawer-panel>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'bookit-app',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'bookit-app',
+        },
+      },
+
+    });
+  </script>
+</dom-module>

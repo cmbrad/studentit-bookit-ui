@@ -1,0 +1,6 @@
+{
+  "name": "studentit-bookit-ui",
+  "short_name": "studentit-bookit-ui",
+  "start_url": "/",
+  "display": "standalone"
+}
