@@ -8,6 +8,8 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../bookit-data/bookit-data.html">
+
 <dom-module id="bookit-app">
   <template>
     <style>
@@ -32,6 +34,8 @@
         padding: 4% 4% 2% 4%;
       }
     </style>
+
+    <bookit-data loading="[[loading]]" state-data="[[stateData]]"></bookit-data>
 
     <paper-drawer-panel force-narrow>
       <paper-header-panel drawer></paper-header-panel>

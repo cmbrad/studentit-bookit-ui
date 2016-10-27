@@ -1,0 +1,89 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+
+<dom-module id="bookit-data">
+    <template>
+        <iron-ajax
+             auto
+             url="http://mapit-proxy.cy.id.au/api.py"
+             params="[[getParams()]]"
+             handle-as="json"
+             on-response="resourceStateResponse"></iron-ajax>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'bookit-data',
+
+            properties: {
+                loading: {
+                    type: Boolean,
+                    notify: true
+                }
+            },
+
+            getParams: function() {
+                /* We use an API proxy to get around CORS restrictions. Therefore we pass the URL we actually
+                    want in as a parameter */
+                return params = {
+                    'url': 'https://bookit.unimelb.edu.au/MyPC/Front.aspx?page=getResourceStatesAPI',
+                };
+            },
+
+            resourceStateResponse: function(e) {
+                var data = e.detail.response;
+                var transformedData = this.transformData(data);
+                console.log(transformedData);
+
+                this.fire('state-data-updated', {data: transformedData});
+            },
+
+            transformData: function(data) {
+                transformed = {};
+
+                for (var s = 0; s < data.length; s++) {
+                    var site = data[s];
+                    transformed[site.name] = {};
+                    transformed[site.name].id = site.id;
+
+                    transformed[site.name].free_rooms = 0;
+                    transformed[site.name].total_rooms = 0;
+                    
+                    transformed[site.name].free_computers = 0;
+                    transformed[site.name].total_computers = 0;
+
+                    for (var l = 0; l < site.locations.length; l++) {
+                        var location = site.locations[l];
+
+                        transformed[site.name][location.name] = {};
+                        transformed[site.name][location.name].id = location.id;
+
+                        for (var r = 0; r < location.resources.length; r++) {
+                            var resource = location.resources[r];
+
+                            transformed[site.name][location.name][resource.name] = {};
+                            transformed[site.name][location.name][resource.name].id = resource.id;
+                            transformed[site.name][location.name][resource.name].state = resource.state;
+
+                            if (location.name.indexOf('Room') >= 0) {
+                                transformed[site.name].total_rooms += 1;
+                                if (resource.state === 'AVAILABLE') {
+                                    transformed[site.name].free_rooms += 1;
+                                }
+                            } else {
+                                transformed[site.name].total_computers += 1;
+                                if (resource.state === 'AVAILABLE') {
+                                    transformed[site.name].free_computers += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return transformed;
+            }
+        });
+    </script>
+</dom-module>
