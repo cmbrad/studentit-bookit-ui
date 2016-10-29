@@ -41,7 +41,7 @@
       }
     </style>
 
-    <bookit-data loading="[[loading]]" state-data="[[stateData]]"></bookit-data>
+    <bookit-data loading="[[loading]]"></bookit-data>
 
     <paper-drawer-panel force-narrow>
       <paper-header-panel drawer></paper-header-panel>
@@ -54,7 +54,12 @@
         <div id="page-content">
           <div id="cards-container">
             <h3>Libraries</h3>
-            <library-card heading="Architecture" image="../../img/library/architecture.jpg"></library-card>
+            <template is="dom-repeat" items="[[stateData]]">
+              <library-card heading="[[item.name]]"
+                image="../../img/library/[[nameToImage(item.name)]]">
+              </library-card>
+            </template>
+            <!--<library-card heading="Architecture" image="../../img/library/architecture.jpg"></library-card>
             <library-card heading="Baillieu" image="../../img/library/baillieu.jpg"></library-card>
             <library-card heading="Brownless" image="../../img/library/brownless.jpg"></library-card>
             <library-card heading="Burnley" image="../../img/library/burnley.jpg"></library-card>
@@ -63,7 +68,7 @@
             <library-card heading="Giblin Eunson" image="../../img/library/giblin_eunson.jpg"></library-card>
             <library-card heading="Law" image="../../img/library/law.jpg"></library-card>
             <library-card heading="Lenton Parr" image="../../img/library/lenton_parr.jpg"></library-card>
-            <library-card heading="Werribee" image="../../img/library/werribee.jpg"></library-card>
+            <library-card heading="Werribee" image="../../img/library/werribee.jpg"></library-card>-->
           </div>
           <div id="cards-container">
             <h3>Actions</h3>
@@ -81,13 +86,40 @@
 
       is: 'bookit-app',
 
+      ready: function() {
+        document.querySelector('bookit-data').addEventListener('state-data-updated', function(e) {
+          //console.log(e.detail.data);
+          //this.stateData = e.detail.data;
+          this.set('stateData', e.detail.data);
+        }.bind(this));
+      },
+
       properties: {
-        prop1: {
-          type: String,
-          value: 'bookit-app',
+        stateData: {
+          type: Array,
+          notify: true
         },
       },
 
+      nameToImage: function(name) {
+        var nameDict = {
+          'Architecture': 'architecture.jpg',
+          'Baillieu': 'baillieu.jpg',
+          'Brownless': 'brownless.jpg',
+          'Burnley': 'burnley.jpg',
+          'ERC': 'eastern_resource_center.jpg',
+          'Giblin Eunson': 'giblin_eunson.jpg',
+          'Law': 'law.jpg',
+          'Lenton Parr': 'lenton_parr.jpg',
+          'Werribee': 'werribee.jpg',
+        }
+
+        console.log(name in nameDict ? nameDict[name] : 'default.jpg');
+
+        return name in nameDict ? nameDict[name] : 'default.jpg';
+      }
     });
+
+
   </script>
 </dom-module>

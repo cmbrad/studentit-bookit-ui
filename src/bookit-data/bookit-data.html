@@ -34,10 +34,10 @@
 
             resourceStateResponse: function(e) {
                 var data = e.detail.response;
-                var transformedData = this.transformData(data);
-                console.log(transformedData);
+                //var transformedData = this.transformData(data);
+                console.log(data);
 
-                this.fire('state-data-updated', {data: transformedData});
+                this.fire('state-data-updated', {data: data});
             },
 
             transformData: function(data) {
