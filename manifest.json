@@ -1,6 +1,6 @@
 {
-  "name": "studentit-bookit-ui",
-  "short_name": "studentit-bookit-ui",
+  "name": "FindIT",
+  "short_name": "FindIT",
   "start_url": "/",
   "display": "standalone"
 }
