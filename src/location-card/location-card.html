@@ -12,15 +12,8 @@
 			:host {
 				display: inline-block;
 				box-sizing: border-box;
-
-                margin: 0 3px 0 3px;
-
+				margin: 0 3px 0 3px;
 				--paper-card-header-color: white;
-				--paper-card-header-image: {
-					filter: brightness(60%);
-                    width: 220px;
-                    height: 160px;
-				}
 				--paper-card-header-text: {
 					cursor: default;
 				}
@@ -50,24 +43,32 @@
 			.room-pip {
 				background-color: #ff4081;
 			}
-
-            paper-card {
-                width: 100%;
-            }
+			
+			paper-card {
+				width: 100%;
+			}
 		</style>
 
-        <paper-card heading="[[heading]]" image="[[image]]" elevation="1" animated-shadow="true">
-            <div class="card-content">
-                <paper-icon-button icon="hardware:desktop-windows"></paper-icon-button>
-                <div class="free-pip computer-pip">[[availableComputers]]</div>
-                <paper-icon-button icon="icons:home"></paper-icon-button>
-                <div class="free-pip room-pip">[[availableRooms]]</div>
-            </div>
-        </paper-card>
+		<paper-card heading="[[heading]]" image="[[image]]" elevation="1" animated-shadow="true">
+			<div class="card-content">
+				<paper-icon-button icon="hardware:desktop-windows"></paper-icon-button>
+				<div class="free-pip computer-pip">[[availableComputers]]</div>
+				<paper-icon-button icon="icons:home"></paper-icon-button>
+				<div class="free-pip room-pip">[[availableRooms]]</div>
+			</div>
+		</paper-card>
 	</template>
 	<script>
         Polymer({
             is: 'location-card',
+
+            ready: function() {
+                this._setCardSize();
+
+                window.addEventListener('resize', function(e) {
+                    this._setCardSize();
+                }.bind(this));
+            },
 
             properties: {
                 heading: {
@@ -85,21 +86,35 @@
                 wide: {
                     type: Boolean,
                     observer: '_wideChanged'
+                },
+                paddingCollapsed: {
+                    type: Boolean
                 }
             },
 
-            _wideChanged: function(wide) {
-                if (wide) {
-                    this.style.width = '100%';
-                    console.log('wide');
-                    this.customStyle['--paper-card-header-image'] = 'width: 100%; height: 160px; filter: brightness(60%);';
-                } else {
-                    console.log('narrow');
-                    this.style.width = 'auto';
-                    this.customStyle['--paper-card-header-image'] = 'width: 220px; height: 160px; filter: brightness(60%);';
-                }
+            _setCardSize: function() {
+                var width = 220;
+                var height = 160;
+
+                var outerPadding = this.paddingCollapsed ? 12 : 96;
+                // Add 6 for margin between cards
+                var extra = this.calcCardSize(window.innerWidth, outerPadding, width + 6);
+                console.log(extra);
+                var totalWidth = width + extra;
+                var totalHeight = height;
+                
+                this.style.width = 'auto';
+                this.customStyle['--paper-card-header-image'] = 'width: ' + String(totalWidth) + 'px; height: ' + String(totalHeight) + 'px; filter: brightness(60%);';
 
                 this.updateStyles();
+            },
+
+            calcCardSize: function(windowWidth, outerPadding, cardWidth) {
+                var availableSpace = windowWidth - outerPadding;
+                var cardsPerRow = Math.floor(availableSpace / cardWidth);
+                var emptySpace = availableSpace % cardWidth;
+
+                return Math.floor(emptySpace / cardsPerRow);
             }
         });
     </script>
