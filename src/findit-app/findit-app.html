@@ -29,6 +29,7 @@
 			
 			::-webkit-scrollbar {
 				width: 0px;
+				height: 0px;
 				/* remove scrollbar space */
 				background: transparent;
 				/* optional: just make scrollbar invisible */
@@ -62,22 +63,19 @@
 				width: 100%;
 				padding-top: 6px;
 				display: flex;
-				overflow-x: auto;
+				overflow-x: scroll;
+				overflow-y: hidden;
+
+				margin-bottom: 12px;
 			}
 
-			location-card, action-card {
+			location-card {
 				margin: 0 3px 0 3px;
 			}
 			
 			@media screen and (min-width: 796px) {
 				#page-content {
-					padding: 0 48px 0 48px;
-				}
-				.actions-container {
-					width: 100%;
-					padding-top: 24px;
-					display: flex;
-					overflow-x: auto;
+					padding: 24px 48px 0 48px;
 				}
 			}
 		</style>
@@ -99,12 +97,14 @@
 						<action-card image="../../img/action/computers.jpg" heading="Nearby Computers"></action-card>
 						<action-card image="../../img/action/project_room.jpg" heading="Nearby Project Rooms"></action-card>
 						<action-card image="../../img/action/bookit.jpg" heading="BookIT"></action-card>
+						<action-card image="../../img/action/studentit.jpg" heading="StudentIT"></action-card>
 					</div>
-					<h3 class="locations-heading">Locations</h3>
+
+					<h3 class="locations-heading" hidden$="[[paddingCollapsed]]">Locations</h3>
 					<div class="locations-container">
 						<template is="dom-repeat" items="[[stateData]]">
-							<location-card heading="[[item.name]]" image="../../img/library/[[locationNameToImage(item.name)]]" available-computers="[[item.available_computers]]"
-								available-rooms="[[item.available_rooms]]" padding-collapsed="[[paddingCollapsed]]">
+							<location-card heading="[[item.name]]" image="../../img/library/[[locationNameToImage(item.name)]]"
+								available-computers="[[item.available_computers]]" available-rooms="[[item.available_rooms]]">
 							</location-card>
 						</template>
 					</div>
