@@ -2,6 +2,7 @@
 
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
@@ -22,6 +23,11 @@
 				font-weight: 400;
 				cursor: default;
 			}
+
+      ::-webkit-scrollbar {
+          width: 0px;  /* remove scrollbar space */
+          background: transparent;  /* optional: just make scrollbar invisible */
+      }
 			
 			#page-content {
 				box-sizing: border-box;
@@ -29,7 +35,9 @@
 				height: 100%;
 				overflow-x: hidden;
 				overflow-y: auto;
-				padding: 0 72px 0 72px;
+				padding: 0 6px 0 6px;
+
+        background: #F5F5F5;
 			}
 			
 			.locations-heading {
@@ -49,13 +57,27 @@
 			
 			.actions-container {
 				width: 100%;
-				padding: 32px 3px 3px 3px;
+				padding: 6px 3px 3px 3px;
 				display: flex;
-				flex-wrap: wrap;
+        overflow-x: auto;
 			}
+
+      @media screen and (min-width: 820px) {
+        #page-content {
+          padding: 0 60px 0 60px;
+        }
+        .actions-container {
+          width: 100%;
+          padding: 24px 3px 3px 3px;
+          display: flex;
+          overflow-x: auto;
+        }
+      }
 		</style>
 
 		<bookit-data loading="[[loading]]"></bookit-data>
+
+    <iron-media-query query="(max-width: 470px)" query-matches="{{wide}}"></iron-media-query>
 
 		<paper-drawer-panel force-narrow>
 			<paper-header-panel drawer></paper-header-panel>
@@ -75,7 +97,7 @@
 					<div class="locations-container">
 						<template is="dom-repeat" items="[[stateData]]">
 							<location-card heading="[[item.name]]" image="../../img/library/[[locationNameToImage(item.name)]]" available-computers="[[item.available_computers]]"
-								available-rooms="[[item.available_rooms]]">
+								available-rooms="[[item.available_rooms]]" wide="[[wide]]">
 							</location-card>
 						</template>
 					</div>

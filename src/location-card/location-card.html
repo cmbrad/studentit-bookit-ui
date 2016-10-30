@@ -12,21 +12,18 @@
 			:host {
 				display: inline-block;
 				box-sizing: border-box;
+
+                margin: 0 3px 0 3px;
+
 				--paper-card-header-color: white;
 				--paper-card-header-image: {
 					filter: brightness(50%);
-					width: 220px;
-					height: 160px;
+                    width: 220px;
+                    height: 160px;
 				}
-				;
 				--paper-card-header-text: {
 					cursor: default;
 				}
-				;
-			}
-			
-			:host {
-				margin: 0 3px 0 3px;
 			}
 			
 			.card-content {
@@ -53,18 +50,20 @@
 			.room-pip {
 				background-color: #ff4081;
 			}
+
+            paper-card {
+                width: 100%;
+            }
 		</style>
 
-		<div id="container">
-			<paper-card heading="[[heading]]" image="[[image]]" elevation="1" animated-shadow="true">
-				<div class="card-content">
-					<paper-icon-button icon="hardware:desktop-windows"></paper-icon-button>
-					<div class="free-pip computer-pip">[[availableComputers]]</div>
-					<paper-icon-button icon="icons:home"></paper-icon-button>
-					<div class="free-pip room-pip">[[availableRooms]]</div>
-				</div>
-			</paper-card>
-		</div>
+        <paper-card heading="[[heading]]" image="[[image]]" elevation="1" animated-shadow="true">
+            <div class="card-content">
+                <paper-icon-button icon="hardware:desktop-windows"></paper-icon-button>
+                <div class="free-pip computer-pip">[[availableComputers]]</div>
+                <paper-icon-button icon="icons:home"></paper-icon-button>
+                <div class="free-pip room-pip">[[availableRooms]]</div>
+            </div>
+        </paper-card>
 	</template>
 	<script>
         Polymer({
@@ -82,9 +81,16 @@
                 },
                 availableRooms: {
                     type: Number
+                },
+                wide: {
+                    type: Boolean,
+                    observer: '_wideChanged'
                 }
             },
 
+            _wideChanged: function(wide) {
+                this.style.width = wide ? '100%' : 'auto';
+            }
         });
     </script>
 </dom-module>
