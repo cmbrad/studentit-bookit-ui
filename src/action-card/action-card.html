@@ -1,0 +1,64 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
+
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="action-card">
+	<template>
+		<style>
+			:host {
+				display: inline-block;
+				box-sizing: border-box;
+			}
+			
+			paper-card {
+				@apply(--layout-horizontal);
+				width: 200px;
+				margin-right: 10px;
+			}
+			
+			.action-header {
+				cursor: default;
+			}
+			
+			.action-content {
+				@apply(--layout-flex);
+				float: left;
+			}
+			
+			.action-image {
+				width: 60px;
+				height: 80px;
+			}
+		</style>
+
+		<div id="container">
+			<paper-card class="action">
+				<div class="action-content">
+					<div class="card-content">
+						<div class="action-header">[[heading]]</div>
+					</div>
+				</div>
+				<div class="action-image" style="background: url([[image]]); background-size: cover;"></div>
+			</paper-card>
+		</div>
+	</template>
+	<script>
+        Polymer({
+            is: 'action-card',
+
+            properties: {
+                heading: {
+                    type: String
+                },
+                image: {
+                    type: String
+                }
+            },
+
+        });
+    </script>
+</dom-module>
