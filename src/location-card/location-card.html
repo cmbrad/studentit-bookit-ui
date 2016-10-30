@@ -112,7 +112,9 @@
             calcCardSize: function(windowWidth, outerPadding, cardWidth) {
                 var availableSpace = windowWidth - outerPadding;
                 var cardsPerRow = Math.floor(availableSpace / cardWidth);
-                var emptySpace = availableSpace % cardWidth;
+                // looks like something somewhere isn't rounding properly.
+                // Take off 1 to be safe
+                var emptySpace = availableSpace % cardWidth - 1;
 
                 return Math.floor(emptySpace / cardsPerRow);
             }
