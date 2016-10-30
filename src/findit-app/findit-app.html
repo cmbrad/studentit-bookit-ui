@@ -1,5 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-register.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-cache.html">
+
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
@@ -15,7 +18,7 @@
 
 <link rel="import" href="../bookit-data/bookit-data.html">
 
-<dom-module id="bookit-app">
+<dom-module id="findit-app">
 	<template>
 		<style>
 			#header-text {
@@ -103,12 +106,16 @@
 				</div>
 			</paper-header-panel>
 		</paper-drawer-panel>
+
+		<platinum-sw-register auto-register>
+  		<platinum-sw-cache></platinum-sw-cache>
+		</platinum-sw-register>
 	</template>
 
 	<script>
     Polymer({
 
-      is: 'bookit-app',
+      is: 'findit-app',
 
       ready: function() {
         document.querySelector('bookit-data').addEventListener('state-data-updated', function(e) {
