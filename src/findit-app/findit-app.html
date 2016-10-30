@@ -16,17 +16,27 @@
 <link rel="import" href="../location-card/location-card.html">
 <link rel="import" href="../action-card/action-card.html">
 
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="../home-view/home-view.html">
+<link rel="import" href="../location-view/location-view.html">
+
 <link rel="import" href="../bookit-data/bookit-data.html">
 
 <dom-module id="findit-app">
 	<template>
 		<style>
-			#header-text {
-				font-size: 20px;
-				font-weight: 400;
-				cursor: default;
+			:host {
+				display: inline;
+				box-sizing: border-box;
+
+				height: 100vh;
+				width: 100vh;
+
 			}
-			
+
 			::-webkit-scrollbar {
 				width: 0px;
 				height: 0px;
@@ -35,65 +45,26 @@
 				/* optional: just make scrollbar invisible */
 			}
 			
-			#page-content {
-				box-sizing: border-box;
-				width: 100vw;
+			iron-pages {
 				height: 100%;
-				overflow-x: hidden;
-				overflow-y: auto;
-				background: #F5F5F5;
+				width: 100%;
+			}
 
-				transition: 0.15s all ease;
-			}
-			
-			.locations-heading {
-				padding-left: 6px;
-				padding-top: 12px;
+			#header-text {
+				font-size: 20px;
+				font-weight: 400;
 				cursor: default;
-			}
-			
-			.locations-container {
-				width: 100%;
-				display: flex;
-				flex-wrap: wrap;
-				padding: 0 6px 0 6px;
-			}
-			
-			.locations-container location-card {
-				margin-bottom: 6px;
-			}
-			
-			.actions-container {
-				width: 100%;
-				padding-top: 6px;
-				display: flex;
-				overflow-x: scroll;
-				overflow-y: hidden;
-				margin-bottom: 12px;
-			}
-			
-			location-card {
-				margin: 0 3px 0 3px;
-			}
-			
-			action-card:first-child {
-				margin-left: 6px;
-			}
-			
-			action-card:last-child {
-				padding-right: 11px;
-			}
-			
-			@media screen and (min-width: 926px) {
-				#page-content {
-					padding: 24px 48px 0 48px;
-				}
 			}
 		</style>
 
-		<bookit-data loading="[[loading]]"></bookit-data>
+		<app-location route="{{route}}"></app-location>
+		<app-route
+			route="{{route}}"
+			pattern="/:view"
+			data="{{routeData}}"	
+			tail="{{subroute}}"></app-route>
 
-		<iron-media-query query="(max-width: 926px)" query-matches="{{paddingCollapsed}}"></iron-media-query>
+		<bookit-data></bookit-data>
 
 		<paper-drawer-panel force-narrow>
 			<paper-header-panel drawer></paper-header-panel>
@@ -103,23 +74,10 @@
 					<div id="header-text" class="flex">FindIT</div>
 				</paper-toolbar>
 
-				<div id="page-content">
-					<div class="actions-container">
-						<action-card image="../../img/action/computers.jpg" heading="Nearby Computers"></action-card>
-						<action-card image="../../img/action/project_room.jpg" heading="Nearby Project Rooms"></action-card>
-						<action-card image="../../img/action/bookit.jpg" heading="BookIT"></action-card>
-						<action-card image="../../img/action/studentit.jpg" heading="StudentIT"></action-card>
-					</div>
-
-					<h3 class="locations-heading" hidden$="[[paddingCollapsed]]">Locations</h3>
-					<div class="locations-container">
-						<template is="dom-repeat" items="[[stateData]]">
-							<location-card heading="[[item.name]]" image="../../img/library/[[locationNameToImage(item.name)]]" available-computers="[[item.available_computers]]"
-								available-rooms="[[item.available_rooms]]">
-							</location-card>
-						</template>
-					</div>
-				</div>
+				<iron-pages selected="[[routeData.view]]" attr-for-selected="name">
+					<home-view name="" route="{{subroute}}" state-data="[[stateData]]"></home-view>
+					<location-view name="location" route="{{subroute}}" state-data="[[stateData]]"></location-view>
+				</iron-pages>
 			</paper-header-panel>
 		</paper-drawer-panel>
 
@@ -130,73 +88,21 @@
 
 	<script>
     Polymer({
-
       is: 'findit-app',
-
-      attached: function() {
-        this._setLocationCardSize();
-      },
 
       ready: function() {
         document.querySelector('bookit-data').addEventListener('state-data-updated', function(e) {
-          this.stateData = e.detail.data;
+          console.log('Received updated state data');
+		  		this.stateData = e.detail.data;
         }.bind(this));
-
-		window.addEventListener('resize', function(e) {
-		  this._setLocationCardSize();
-		}.bind(this));
       },
 
       properties: {
         stateData: {
           type: Array,
           notify: true
-        },
-      },
-
-      locationNameToImage: function(name) {
-        var nameDict = {
-          'Architecture': 'architecture.jpg',
-          'Baillieu': 'baillieu.jpg',
-          'Brownless': 'brownless.jpg',
-          'Burnley': 'burnley.jpg',
-          'ERC': 'eastern_resource_center.jpg',
-          'Frank Tate': 'frank_tate.jpg',
-          'Giblin Eunson': 'giblin_eunson.jpg',
-          'Law': 'law.jpg',
-          'Lenton Parr': 'lenton_parr.jpg',
-          'Werribee - Vet Sci': 'werribee.jpg',
         }
-
-        return name in nameDict ? nameDict[name] : 'default.jpg';
-      },
-
-			_setLocationCardSize: function() {
-					var width = 220;
-					var height = 160;
-
-					var outerPadding = this.paddingCollapsed ? 12 : 96;
-					// Add 6 for margin between cards
-					var extra = this.calcCardSize(window.innerWidth, outerPadding, width + 6);
-
-					var totalWidth = width + extra;
-					var totalHeight = height;
-					
-					this.style.width = 'auto';
-					this.customStyle['--paper-card-header-image'] = 'width: ' + String(totalWidth) + 'px; height: ' + String(totalHeight) + 'px; filter: brightness(60%);';
-
-					this.updateStyles();
-			},
-
-			calcCardSize: function(windowWidth, outerPadding, cardWidth) {
-					var availableSpace = windowWidth - outerPadding;
-					var cardsPerRow = Math.floor(availableSpace / cardWidth);
-					// looks like something somewhere isn't rounding properly.
-					// Take off 1 to be safe
-					var emptySpace = availableSpace % cardWidth - 1;
-
-					return Math.floor(emptySpace / cardsPerRow);
-			}
+      }
     });
   </script>
 </dom-module>

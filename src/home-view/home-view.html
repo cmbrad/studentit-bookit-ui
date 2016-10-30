@@ -1,0 +1,163 @@
+<dom-module id="home-view">
+	<template>
+		<style>
+			:host {
+				display: block;
+				box-sizing: border-box;
+				width: 100%;
+				height: 100%;
+				overflow-x: hidden;
+				overflow-y: auto;
+				background: #F5F5F5;
+				transition: 0.15s all ease;
+				width: 100%;
+				height: 100%;
+			}
+			
+			::-webkit-scrollbar {
+				width: 0px;
+				height: 0px;
+				/* remove scrollbar space */
+				background: transparent;
+				/* optional: just make scrollbar invisible */
+			}
+			
+			.locations-heading {
+				padding-left: 6px;
+				padding-top: 12px;
+				cursor: default;
+			}
+			
+			.locations-container {
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				padding: 0 6px 0 6px;
+			}
+			
+			.locations-container location-card {
+				margin-bottom: 6px;
+			}
+			
+			.actions-container {
+				width: 100%;
+				padding-top: 6px;
+				display: flex;
+				overflow-x: scroll;
+				overflow-y: hidden;
+				margin-bottom: 12px;
+			}
+			
+			location-card {
+				margin: 0 3px 0 3px;
+			}
+			
+			action-card:first-child {
+				margin-left: 6px;
+			}
+			
+			action-card:last-child {
+				padding-right: 11px;
+			}
+			
+			@media screen and (min-width: 926px) {
+				:host {
+					padding: 24px 48px 0 48px;
+				}
+			}
+		</style>
+
+		<iron-media-query query="(max-width: 926px)" query-matches="{{paddingCollapsed}}"></iron-media-query>
+
+		<div class="actions-container">
+			<action-card image="../../img/action/computers.jpg" heading="Nearby Computers"></action-card>
+			<action-card image="../../img/action/project_room.jpg" heading="Nearby Project Rooms"></action-card>
+			<action-card image="../../img/action/bookit.jpg" heading="BookIT"></action-card>
+			<action-card image="../../img/action/studentit.jpg" heading="StudentIT"></action-card>
+		</div>
+
+		<h3 class="locations-heading" hidden$="[[paddingCollapsed]]">Locations</h3>
+		<div class="locations-container">
+			<template is="dom-repeat" items="[[stateData]]">
+				<location-card heading="[[item.name]]" image="../../img/library/[[locationNameToImage(item.name)]]" available-computers="[[item.available_computers]]"
+					available-rooms="[[item.available_rooms]]" site-id="[[item.id]]" on-tap="_tappedCard">
+				</location-card>
+			</template>
+		</div>
+
+	</template>
+	<script>
+		Polymer({
+			is: 'home-view',
+
+			ready: function() {
+				window.addEventListener('resize', function(e) {
+					this._setLocationCardSize();
+				}.bind(this));
+			},
+
+			attached: function() {
+				this._setLocationCardSize();
+			},
+
+			properties: {
+				stateData: {
+					type: Array
+				},
+				route: {
+					type: Object
+				}
+			},
+
+			_tappedCard: function(e) {
+				console.log(e.currentTarget.siteId);
+
+				this.set('route.path', window.location.host + '/location/' + String(e.currentTarget.siteId));			
+			},
+
+			locationNameToImage: function(name) {
+				var nameDict = {
+					'Architecture': 'architecture.jpg',
+					'Baillieu': 'baillieu.jpg',
+					'Brownless': 'brownless.jpg',
+					'Burnley': 'burnley.jpg',
+					'ERC': 'eastern_resource_center.jpg',
+					'Frank Tate': 'frank_tate.jpg',
+					'Giblin Eunson': 'giblin_eunson.jpg',
+					'Law': 'law.jpg',
+					'Lenton Parr': 'lenton_parr.jpg',
+					'Werribee - Vet Sci': 'werribee.jpg',
+				}
+
+				return name in nameDict ? nameDict[name] : 'default.jpg';
+			},
+
+			_setLocationCardSize: function() {
+				var width = 220;
+				var height = 160;
+
+				var outerPadding = this.paddingCollapsed ? 12 : 96;
+				// Add 6 for margin between cards
+				var extra = this.calcCardSize(window.innerWidth, outerPadding, width + 6);
+
+				var totalWidth = width + extra;
+				var totalHeight = height;
+				
+				this.style.width = 'auto';
+				this.customStyle['--paper-card-header-image'] = 'width: ' + String(totalWidth) + 'px; height: ' + String(totalHeight) + 'px; filter: brightness(60%);';
+
+				this.updateStyles();
+			},
+
+			calcCardSize: function(windowWidth, outerPadding, cardWidth) {
+				var availableSpace = windowWidth - outerPadding;
+				var cardsPerRow = Math.floor(availableSpace / cardWidth);
+				// looks like something somewhere isn't rounding properly.
+				// Take off 1 to be safe
+				var emptySpace = availableSpace % cardWidth - 1;
+
+				return Math.floor(emptySpace / cardsPerRow);
+			}
+		});
+    </script>
+</dom-module>

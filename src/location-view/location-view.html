@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+<dom-module id="location-view">
+    <template>
+        <style>
+            :host {
+                display: inline;
+            }
+        </style>
+
+        <app-route
+			route="{{route}}"
+			pattern="/:siteId"
+			data="{{routeData}}"	
+			tail="{{subroute}}"></app-route>
+        
+        <template is="dom-repeat" items="[[_locationData.locations]]" as="location">
+            <h2>[[cleanName(location.name)]]</h2>
+            <template is="dom-repeat" items="[[location.resources]]" as="resource">
+                <paper-item>[[resource.name]] - [[resource.state]]</paper-item>
+            </template>
+        </template>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'location-view',
+
+            properties: {
+                route: {
+                    type: Object,
+                    observer: '_updateLocationData'
+                },
+                stateData: {
+                    type: Array,
+                    observer: '_updateLocationData'
+                },
+                _locationData: {
+                    type: Object
+                }
+            },
+
+            _updateLocationData: function() {
+                var data = this.stateData;
+                if (!data) {
+                    return;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (String(data[i].id) === this.routeData.siteId) {
+                        this._locationData = data[i];
+                    }
+                }
+            },
+
+            cleanName: function(name) {
+                if (name[0] === ':') {
+                    name = name.substring(1);
+                }
+
+                return name;
+            }
+        });
+    </script>
+</dom-module>

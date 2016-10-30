@@ -5,20 +5,20 @@
 
 <dom-module id="bookit-data">
 	<template>
-		<iron-ajax auto url="http://mapit-proxy.cy.id.au/api.py" params="[[getParams()]]" handle-as="json" on-response="resourceStateResponse"></iron-ajax>
+		<iron-ajax id="stateAjax" auto url="http://mapit-proxy.cy.id.au/api.py" params="[[getParams()]]" handle-as="json" on-response="resourceStateResponse"></iron-ajax>
 	</template>
 
 	<script>
         Polymer({
             is: 'bookit-data',
 
-            properties: {
-                loading: {
-                    type: Boolean,
-                    notify: true
-                }
+            created: function() {
+                console.log('Starting refresh timer..');
+                setInterval(function() {
+                    this.$.stateAjax.generateRequest();
+                }.bind(this), 60000);
             },
-
+            
             getParams: function() {
                 /* We use an API proxy to get around CORS restrictions. Therefore we pass the URL we actually
                     want in as a parameter */
