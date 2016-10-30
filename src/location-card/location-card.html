@@ -17,7 +17,7 @@
 
 				--paper-card-header-color: white;
 				--paper-card-header-image: {
-					filter: brightness(50%);
+					filter: brightness(60%);
                     width: 220px;
                     height: 160px;
 				}
@@ -89,7 +89,17 @@
             },
 
             _wideChanged: function(wide) {
-                this.style.width = wide ? '100%' : 'auto';
+                if (wide) {
+                    this.style.width = '100%';
+                    console.log('wide');
+                    this.customStyle['--paper-card-header-image'] = 'width: 100%; height: 160px; filter: brightness(60%);';
+                } else {
+                    console.log('narrow');
+                    this.style.width = 'auto';
+                    this.customStyle['--paper-card-header-image'] = 'width: 220px; height: 160px; filter: brightness(60%);';
+                }
+
+                this.updateStyles();
             }
         });
     </script>
