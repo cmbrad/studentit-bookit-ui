@@ -11,14 +11,13 @@
 		<style>
 			:host {
 				display: inline-block;
-				box-sizing: border-box;
-				margin: 3px 3px 3px 3px;
+				box-sizing: border-box;	
+				padding: 3px;
 			}
 			
 			paper-card {
 				@apply(--layout-horizontal);
 				width: 200px;
-				margin-right: 10px;
 			}
 			
 			.action-header {
@@ -36,16 +35,14 @@
 			}
 		</style>
 
-		<div id="container">
-			<paper-card class="action">
-				<div class="action-content">
-					<div class="card-content">
-						<div class="action-header">[[heading]]</div>
-					</div>
+		<paper-card class="action">
+			<div class="action-content">
+				<div class="card-content">
+					<div class="action-header">[[heading]]</div>
 				</div>
-				<div class="action-image" style="background: url([[image]]); background-size: cover;"></div>
-			</paper-card>
-		</div>
+			</div>
+			<div class="action-image" style="background: url([[image]]); background-size: cover;"></div>
+		</paper-card>
 	</template>
 	<script>
         Polymer({

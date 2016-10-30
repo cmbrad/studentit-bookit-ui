@@ -12,7 +12,6 @@
 			:host {
 				display: inline-block;
 				box-sizing: border-box;
-				margin: 0 3px 0 3px;
 				--paper-card-header-color: white;
 				--paper-card-header-text: {
 					cursor: default;
@@ -62,14 +61,6 @@
         Polymer({
             is: 'location-card',
 
-            ready: function() {
-                this._setCardSize();
-
-                window.addEventListener('resize', function(e) {
-                    this._setCardSize();
-                }.bind(this));
-            },
-
             properties: {
                 heading: {
                     type: String
@@ -82,41 +73,7 @@
                 },
                 availableRooms: {
                     type: Number
-                },
-                wide: {
-                    type: Boolean,
-                    observer: '_wideChanged'
-                },
-                paddingCollapsed: {
-                    type: Boolean
                 }
-            },
-
-            _setCardSize: function() {
-                var width = 220;
-                var height = 160;
-
-                var outerPadding = this.paddingCollapsed ? 12 : 96;
-                // Add 6 for margin between cards
-                var extra = this.calcCardSize(window.innerWidth, outerPadding, width + 6);
-                console.log(extra);
-                var totalWidth = width + extra;
-                var totalHeight = height;
-                
-                this.style.width = 'auto';
-                this.customStyle['--paper-card-header-image'] = 'width: ' + String(totalWidth) + 'px; height: ' + String(totalHeight) + 'px; filter: brightness(60%);';
-
-                this.updateStyles();
-            },
-
-            calcCardSize: function(windowWidth, outerPadding, cardWidth) {
-                var availableSpace = windowWidth - outerPadding;
-                var cardsPerRow = Math.floor(availableSpace / cardWidth);
-                // looks like something somewhere isn't rounding properly.
-                // Take off 1 to be safe
-                var emptySpace = availableSpace % cardWidth - 1;
-
-                return Math.floor(emptySpace / cardsPerRow);
             }
         });
     </script>
