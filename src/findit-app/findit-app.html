@@ -42,6 +42,8 @@
 				overflow-x: hidden;
 				overflow-y: auto;
 				background: #F5F5F5;
+
+				transition: 0.15s all ease;
 			}
 			
 			.locations-heading {
@@ -82,7 +84,7 @@
 				padding-right: 11px;
 			}
 			
-			@media screen and (min-width: 796px) {
+			@media screen and (min-width: 926px) {
 				#page-content {
 					padding: 24px 48px 0 48px;
 				}
@@ -91,7 +93,7 @@
 
 		<bookit-data loading="[[loading]]"></bookit-data>
 
-		<iron-media-query query="(max-width: 796px)" query-matches="{{paddingCollapsed}}"></iron-media-query>
+		<iron-media-query query="(max-width: 926px)" query-matches="{{paddingCollapsed}}"></iron-media-query>
 
 		<paper-drawer-panel force-narrow>
 			<paper-header-panel drawer></paper-header-panel>
