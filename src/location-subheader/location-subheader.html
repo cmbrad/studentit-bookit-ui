@@ -1,0 +1,40 @@
+
+<dom-module id="location-subheader">
+    <template>
+        <style>
+            :host {
+                display: flex;
+                justify-content: space-between;
+
+				color: #00457c;
+				padding: 0 24px 0 72px;
+				height: 48px;
+
+				@apply(--layout-horizontal);
+				@apply(--layout-center);
+				@apply(--paper-font-body1);
+
+				cursor: default;
+            }            
+        </style>
+        
+        <div id="header">[[header]]</div>
+    </template>
+    <script>
+        Polymer({
+            is: 'location-subheader',
+
+            properties: {
+                header: {
+                    type: String
+                },
+                availableResources: {
+                    type: String
+                },
+                totalResources: {
+                    type: String
+                }
+            }
+        });
+    </script>
+</dom-module>

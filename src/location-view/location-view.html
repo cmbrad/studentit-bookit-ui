@@ -1,13 +1,85 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-item/all-imports.html">
+<link rel="import" href="../../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../location-subheader/location-subheader.html">
+
+<link rel="import" href="../location-map/location-map.html">
 
 <dom-module id="location-view">
     <template>
         <style>
             :host {
-                display: inline;
+				display: flex;
+				box-sizing: border-box;
+
+                height: 100%;
+                overflow: hidden;
             }
+
+            #list-panel {
+                width: 460px;
+                height: 100%;
+
+                transition: 0.6s all ease;
+            }
+
+            #info-panel {
+                width: 100%;
+                height: 100%;
+            }
+
+            paper-material {
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+            }
+
+            paper-icon-button {
+                color: var(--paper-grey-600);
+            }
+
+            paper-icon-button:hover {
+                color: var(--paper-grey-900);
+            }
+
+            .avatar {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+
+            .available {
+                background-color: var(--paper-green-400);
+            }
+
+            .unavailable {
+                background-color: var(--paper-grey-500);
+            }
+
+            .reserved, .in-use {
+                background-color: var(--paper-red-400);
+            }
+
+            .unknown {
+                background: var(--paper-light-blue-500);
+            }
+
+            .default-cursor {
+                cursor: default;
+            }
+
+			@media screen and (max-width: 800px) {
+				#list-panel {
+					width: 100%;
+				}
+
+                #info-panel {
+                    display: none;
+                }
+			}
         </style>
 
         <app-route
@@ -16,13 +88,30 @@
 			data="{{routeData}}"	
 			tail="{{subroute}}"></app-route>
         
-        <template is="dom-repeat" items="[[_locationData.locations]]" as="location">
-            <h2>[[cleanName(location.name)]]</h2>
-            <template is="dom-repeat" items="[[location.resources]]" as="resource">
-                <paper-item>[[resource.name]] - [[resource.state]]</paper-item>
-            </template>
-        </template>
+        <div id="list-panel">
+            <paper-material elevation="2">
+                <template is="dom-repeat" items="[[_locationData.locations]]" as="location">
+                    <location-subheader header="[[cleanName(location.name)]]"
+                        available-resources="[[_availableResources(location)]]" total-resources="[[_totalResources(location)]]">
+                    </location-subheader>
+                    <template is="dom-repeat" items="[[location.resources]]" as="resource" filter="_filterResource">
+                        <paper-icon-item>
+                            <div class$="avatar [[_colourAvatar(resource)]]" item-icon></div>
+                            <paper-item-body class="default-cursor" two-line>
+                                <div>[[resource.name]]</div>
+                                <div secondary>X minutes remaining</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="add-circle" alt="make a booking">
+                            </paper-icon-button>    
+                        </paper-icon-item>
+                    </template>
+                </template>
+            </paper-material>
+        </div>
 
+        <div id="info-panel">
+            <location-map></location-map>
+        </div>
     </template>
     <script>
         Polymer({
@@ -52,6 +141,34 @@
                         this._locationData = data[i];
                     }
                 }
+            },
+
+            _availableResources: function(location) {
+                return location.available_computers + location.available_rooms;
+            },
+
+            _totalResources: function(location) {
+                return location.total_computers + location.total_rooms;
+            },
+
+            _filterResource: function(resource) {
+                return true || resource.state === 'AVAILABLE';
+            },
+
+            _colourAvatar: function(resource) {
+                var state = resource.state;
+                var stateDict = {
+                    'AVAILABLE': 'available',
+                    'NOT_AVAILABLE': 'unavailable',
+                    'RESERVED': 'reserved',
+                    'IN_USE': 'in-use'
+                }
+
+                if (!(state in stateDict)) {
+                    console.warn('Unknown state found ' + String(state));
+                }
+                
+                return state in stateDict ? stateDict[state] : 'unknown';
             },
 
             cleanName: function(name) {
