@@ -60,7 +60,12 @@
 			route="{{route}}"
 			pattern="/:view"
 			data="{{routeData}}"	
-			tail="{{subroute}}"></app-route>
+			tail="{{subRoute}}"></app-route>
+		<app-route
+			route="{{subRoute}}"
+			pattern="/:siteId"
+			data="{{locationRouteData}}"	></app-route>
+
 
 		<bookit-data></bookit-data>
 
@@ -73,8 +78,8 @@
 				</paper-toolbar>
 
 				<neon-animated-pages id="pages" selected="[[routeData.view]]" attr-for-selected="name" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
-					<home-view name="" route="{{subroute}}" state-data="[[stateData]]"></home-view>
-					<location-view name="location" route="{{subroute}}" state-data="[[stateData]]"></location-view>
+					<home-view name="" route="{{route}}" state-data="[[stateData]]"></home-view>
+					<location-view name="location" site-id="[[locationRouteData.siteId]]" state-data="[[stateData]]"></location-view>
 				</neon-animated-pages>
 			</paper-header-panel>
 		</paper-drawer-panel>

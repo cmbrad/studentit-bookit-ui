@@ -118,7 +118,7 @@
 			_tappedCard: function(e) {
 				console.log(e.currentTarget.siteId);
 
-				this.set('route.path', window.location.host + '/location/' + String(e.currentTarget.siteId));			
+				this.set('route.path', 'location/' + String(e.currentTarget.siteId));			
 			},
 
 			locationNameToImage: function(name) {

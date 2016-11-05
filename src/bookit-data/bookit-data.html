@@ -28,8 +28,7 @@
             },
 
             resourceStateResponse: function(e) {
-                var data = e.detail.response;
-                this.fire('state-data-updated', {data: this.calculateAvailableResources(data)});
+                this.fire('state-data-updated', {data: this.calculateAvailableResources(e.detail.response)});
             },
 
             calculateAvailableResources: function(data) {
