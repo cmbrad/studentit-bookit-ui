@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/highcharts-chart/highcharts-chart.html">
+
+<dom-module id="summary-chart">
+    <template>
+        <style>
+            :host {
+                display: block;
+                overflow: hidden;
+            }
+        </style>
+
+        <highcharts-chart type="spline" title="[[title]]"></highcharts-chart>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'summary-chart',
+
+            ready: function() {
+                var chart = this.$$("highcharts-chart");
+
+                chart.legend = {
+                    enabled: true
+                }
+                chart.removeSeries(0, false);
+
+                chart.addSeries("Available Computers");
+                chart.addSeries("Available Rooms");
+
+                chart.xAxis = {
+                    type: 'datetime',
+                    tickInterval: 10000
+                }
+
+                chart.yAxis = {
+                    title: {
+                        text: '% Free'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }],
+                    min: 0,
+                    max: 100
+                }
+            },
+
+            properties: {
+                title: {
+                    type: String
+                },
+                chartData: {
+                    type: Object
+                },
+                points: {
+                    type: Number,
+                    value: 0
+                }
+            },
+
+            addPoint: function(x, y, series, redraw) {
+                this.points += 1;
+                this.$$("highcharts-chart").pushData(x, y, series, this.points <= 120, false, redraw);
+            }
+        });
+    </script>
+</dom-module>

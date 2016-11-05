@@ -1,0 +1,52 @@
+
+<link rel="import" href="../summary-chart/summary-chart.html">
+
+<dom-module id="summary-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            summary-chart {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+
+        <summary-chart title="Usage Summary" chart-data="[[_chartData]]"></summary-chart>
+    </template>
+    <script>
+        Polymer({
+            is: 'summary-view',
+
+            properties: {
+                stateData: {
+                    type: Object,
+                    observer: '_stateDataChanged'
+                }
+            },
+
+            _stateDataChanged: function(stateData) {
+                var totalComputers, availableComputers;
+                var totalRooms, availableRooms;
+
+                var time = (new Date()).getTime();
+
+                totalComputers = availableComputers = totalRooms = availableRooms = 0;
+
+                for (var i = 0; i < stateData.length; i++) {
+                    var location = stateData[i];
+                    totalComputers += location.total_computers;
+                    availableComputers += location.available_computers;
+
+                    totalRooms += location.total_rooms;
+                    availableRooms += location.available_rooms;
+                }
+
+                this.$$("summary-chart").addPoint(time, 100*(availableComputers / totalComputers), 0, false);
+                this.$$("summary-chart").addPoint(time, 100*(availableRooms / totalRooms), 1, true);
+            }
+        });
+    </script>
+</dom-module>

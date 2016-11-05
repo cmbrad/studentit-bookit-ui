@@ -15,12 +15,13 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 
+<link rel="import" href="../home-view/home-view.html">
+<link rel="import" href="../location-view/location-view.html">
+<link rel="import" href="../summary-view/summary-view.html">
+
 <link rel="import" href="../../bower_components/neon-animation/neon-animated-pages.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/slide-left-animation.html">
 <link rel="import" href="../../bower_components/neon-animation/animations/slide-from-right-animation.html">
-
-<link rel="import" href="../home-view/home-view.html">
-<link rel="import" href="../location-view/location-view.html">
 
 <link rel="import" href="../bookit-data/bookit-data.html">
 
@@ -77,13 +78,14 @@
 				<neon-animated-pages id="pages" selected="[[routeData.view]]" attr-for-selected="name" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
 					<home-view name="" route="{{route}}" state-data="[[stateData]]"></home-view>
 					<location-view name="location" site-id="[[locationRouteData.siteId]]" state-data="[[stateData]]"></location-view>
+					<summary-view name="summary" state-data="[[stateData]]"</summary-view>
 				</neon-animated-pages>
 			</paper-header-panel>
 		</paper-drawer-panel>
 
-		<platinum-sw-register auto-register>
+		<!--<platinum-sw-register auto-register>
 			<platinum-sw-cache></platinum-sw-cache>
-		</platinum-sw-register>
+		</platinum-sw-register>-->
 	</template>
 
 	<script>
@@ -91,7 +93,7 @@
       is: 'findit-app',
 
       ready: function() {
-        document.querySelector('bookit-data').addEventListener('state-data-updated', function(e) {
+        this.$$("#bookit-data").addEventListener('state-data-updated', function(e) {
           console.log('Received updated state data');
 					console.log(e.detail.data);
 		  		this.stateData = e.detail.data;

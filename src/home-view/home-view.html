@@ -33,14 +33,14 @@
 				cursor: default;
 			}
 			
-			.locations-container {
+			#locations-container {
 				width: 100%;
 				display: flex;
 				flex-wrap: wrap;
 				padding: 0 6px 0 6px;
 			}
 			
-			.locations-container location-card {
+			#locations-container location-card {
 				margin-bottom: 6px;
 			}
 			
@@ -82,16 +82,15 @@
 		</div>
 
 		<h3 class="locations-heading" hidden$="[[paddingCollapsed]]">Locations</h3>
-		<div class="locations-container">
-			<template is="dom-repeat" items="[[stateData]]">
+		<div id="locations-container">
+			<template id="location-repeat" is="dom-repeat" items="[[stateData]]">
 				<location-card heading="[[item.name]]" image="../../img/library/[[locationNameToImage(item.name)]]" available-computers="[[item.available_computers]]"
 					available-rooms="[[item.available_rooms]]" site-id="[[item.id]]" on-tap="_tappedCard">
 				</location-card>
 			</template>
 		</div>
-
-
 	</template>
+
 	<script>
 		Polymer({
 			is: 'home-view',
@@ -101,7 +100,11 @@
 					this._setLocationCardSize();
 				}.bind(this));
 
-				this._setLocationCardSize();
+				// Need to do this in dom change, otherwise the cards haven't actually been added yet so
+				// are not resized properly
+				this.$$("#location-repeat").addEventListener('dom-change', function(e) {
+					this._setLocationCardSize();
+				}.bind(this));
 			},
 
 			properties: {
@@ -114,8 +117,6 @@
 			},
 
 			_tappedCard: function(e) {
-				console.log(e.currentTarget.siteId);
-
 				this.set('route.path', 'location/' + String(e.currentTarget.siteId));			
 			},
 
