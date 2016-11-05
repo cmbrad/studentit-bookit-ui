@@ -5,7 +5,7 @@
 
 <dom-module id="bookit-data">
 	<template>
-		<iron-ajax id="stateAjax" auto url="http://mapit-proxy.cy.id.au/api.py" params="[[getParams()]]" handle-as="json" on-response="resourceStateResponse"></iron-ajax>
+		<iron-ajax id="stateAjax" url="http://mapit-proxy.cy.id.au/api.py" params="[[_getParams()]]" handle-as="json" on-response="resourceStateResponse"></iron-ajax>
 	</template>
 
 	<script>
@@ -15,11 +15,90 @@
             created: function() {
                 console.log('Starting refresh timer..');
                 setInterval(function() {
-                    this.$.stateAjax.generateRequest();
+                    this._updateData();
                 }.bind(this), 60000);
             },
+
+            properties: {
+                bookitUrl: {
+                    type: String
+                },
+                enabled: {
+                    type: Boolean,
+                    observer: '_enabledChanged'
+                }
+            },
+
+            _enabledChanged: function(enabled) {
+                if (!enabled) {
+                    console.log('Disabling data supply');
+                    return;
+                }
+                console.log('Enabling data supply');
+
+                var skeletonData = [
+                    {
+                        "id": 8,
+                        "name": "Architecture",
+                        "locations": []
+                    },
+                    {
+                        "id": 2,
+                        "name": "Baillieu",
+                        "locations": []
+                    },
+                    {
+                        "id": 11,
+                        "name": "Brownless",
+                        "locations": []
+                    },
+                    {
+                        "id": 16,
+                        "name": "Burnley",
+                        "locations": []
+                    },
+                    {
+                        "id": 7,
+                        "name": "ERC",
+                        "locations": []
+                    },
+                    {
+                        "id": 15,
+                        "name": "Frank Tate",
+                        "locations": []
+                    },
+                    {
+                        "id": 3,
+                        "name": "Giblin Eunson",
+                        "locations": []
+                    },
+                    {
+                        "id": 12,
+                        "name": "Law",
+                        "locations": []
+                    },
+                    {
+                        "id": 9,
+                        "name": "Lenton Parr",
+                        "locations": []
+                    },
+                    {
+                        "id": 17,
+                        "name": "Werribee - Vet Sci",
+                        "locations": []
+                    }
+                ]
+                console.log('Sending skeleton data');
+                this.fire('state-data-updated', {data: this.calculateAvailableResources(skeletonData)});
+                
+                this._updateData();
+            },
+
+            _updateData: function() {
+                this.$.stateAjax.generateRequest();
+            },
             
-            getParams: function() {
+            _getParams: function() {
                 /* We use an API proxy to get around CORS restrictions. Therefore we pass the URL we actually
                     want in as a parameter */
                 return params = {

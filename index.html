@@ -6,18 +6,48 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/manifest.json">
+
     <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="/src/findit-app/findit-app.html">
-
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-
     <style>
       body, html {
-        font-family: 'Noto Sans', sans-serif;
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        width: 100%;
+        height: 100%;
+      }
+
+      #container {
+        height: 100%;
+        flex-direction: column;
+        display: flex;
+      }
+
+      #toolbar {
+        height: 64px;
+        background-color: #3f51b5;
+        color: white;
+      }
+
+      #content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     </style>
   </head>
   <body>
-    <findit-app></findit-app>
+    <findit-app>
+      <div id="container">
+        <!-- shell to load while waiting for components -->
+        <div id="toolbar"></div>
+        <div id="content">
+          <noscript>
+            <h1>This page requires JavaScript to function</h1>
+          </noscript>
+        </div>
+      </div>
+    </findit-app>
   </body>
 </html>

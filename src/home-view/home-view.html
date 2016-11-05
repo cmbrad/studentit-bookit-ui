@@ -100,9 +100,7 @@
 				window.addEventListener('resize', function(e) {
 					this._setLocationCardSize();
 				}.bind(this));
-			},
 
-			attached: function() {
 				this._setLocationCardSize();
 			},
 
@@ -142,12 +140,16 @@
 				var width = 230;
 				var height = 160;
 
+				console.log(window.innerWidth);
+
 				var outerPadding = this.paddingCollapsed ? 12 : 96;
 				// Add 6 for margin between cards
 				var extra = this.calcCardSize(window.innerWidth, outerPadding, width + 6);
 
 				var totalWidth = width + extra;
 				var totalHeight = height;
+
+				console.log(totalWidth);
 				
 				this.style.width = 'auto';
 				this.customStyle['--paper-card-header-image'] = 'width: ' + String(totalWidth) + 'px; height: ' + String(totalHeight) + 'px; filter: brightness(60%);';
