@@ -6,6 +6,7 @@
 
 <link rel="import" href="../location-map/location-map.html">
 
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 
@@ -75,6 +76,10 @@
                 cursor: default;
             }
 
+            iron-list {
+                height: 100%;
+            }
+
 			@media screen and (max-width: 800px) {
 				#list-panel {
 					width: 100%;
@@ -108,17 +113,19 @@
         
         <div id="list-panel">
             <paper-material elevation="2">
-                <template id="resource-repeat" is="dom-repeat" items="[[_resources]]" as="resource" filter="_filterResource">
-                    <paper-icon-item>
-                        <div class$="avatar [[_colourAvatar(resource)]]" item-icon></div>
-                        <paper-item-body class="default-cursor" two-line>
-                            <div>[[resource.name]]</div>
-                            <div secondary>X minutes remaining</div>
-                        </paper-item-body>
-                        <paper-icon-button icon="add-circle" alt="make a booking">
-                        </paper-icon-button>    
-                    </paper-icon-item>
-                </template>
+                <iron-list id="resource-list" items="[[_filterResources(_resources)]]" as="resource">
+                    <template>
+                        <paper-icon-item>
+                            <div class$="avatar [[_colourAvatar(resource)]]" item-icon></div>
+                            <paper-item-body class="default-cursor" two-line>
+                                <div>[[resource.name]]</div>
+                                <div secondary>X minutes remaining</div>
+                            </paper-item-body>
+                            <paper-icon-button icon="add-circle" alt="make a booking">
+                            </paper-icon-button>    
+                        </paper-icon-item>
+                    </template>
+                </iron-list>
             </paper-material>
 
             <paper-fab id="filter-fab" icon="filter-list" title="Filter List" on-tap="_tapFilterBtn"></paper-fab>
@@ -128,9 +135,16 @@
             <location-map></location-map>
         </div>
     </template>
+
     <script>
         Polymer({
             is: 'location-view',
+
+			ready: function() {
+				window.addEventListener('resize', function(e) {
+					this.$$("#resource-list").updateViewportBoundaries();
+				}.bind(this));
+			},
 
             properties: {
                 route: {
@@ -178,8 +192,11 @@
                 return location.total_computers + location.total_rooms;
             },
 
-            _filterResource: function(resource) {
-                return !this._filterOn || resource.state === 'AVAILABLE';
+            _filterResources: function(resources) {
+                return resources.filter(function(resource) {
+                    console.log(this._filterOn);
+                    return !this._filterOn || resource.state === 'AVAILABLE';
+                }.bind(this));
             },
 
             _colourAvatar: function(resource) {
@@ -214,7 +231,7 @@
                     console.log("Filter is now on");
                     this._filterOn = true;
                 }
-                this.$$('#resource-repeat').render();
+                this._resources = this._resources.slice();
             }
         });
     </script>
