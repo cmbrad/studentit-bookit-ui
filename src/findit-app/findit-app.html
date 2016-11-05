@@ -13,12 +13,10 @@
 <link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 
-<link rel="import" href="../location-card/location-card.html">
-<link rel="import" href="../action-card/action-card.html">
-
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animations.html">
 
 <link rel="import" href="../home-view/home-view.html">
 <link rel="import" href="../location-view/location-view.html">
@@ -45,7 +43,7 @@
 				/* optional: just make scrollbar invisible */
 			}
 			
-			iron-pages {
+			#pages {
 				height: 100%;
 				width: 100%;
 			}
@@ -74,10 +72,10 @@
 					<div id="header-text" class="flex">FindIT</div>
 				</paper-toolbar>
 
-				<iron-pages selected="[[routeData.view]]" attr-for-selected="name">
+				<neon-animated-pages id="pages" selected="[[routeData.view]]" attr-for-selected="name" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
 					<home-view name="" route="{{subroute}}" state-data="[[stateData]]"></home-view>
 					<location-view name="location" route="{{subroute}}" state-data="[[stateData]]"></location-view>
-				</iron-pages>
+				</neon-animated-pages>
 			</paper-header-panel>
 		</paper-drawer-panel>
 

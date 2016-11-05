@@ -6,6 +6,9 @@
 
 <link rel="import" href="../location-map/location-map.html">
 
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
 <dom-module id="location-view">
     <template>
         <style>
@@ -18,6 +21,7 @@
             }
 
             #list-panel {
+                position: relative;
                 width: 460px;
                 height: 100%;
 
@@ -79,7 +83,21 @@
                 #info-panel {
                     display: none;
                 }
+
+                #filter-fab {
+                    position: absolute;
+
+                    right: 16px;
+                    bottom: 16px;
+                }
 			}
+
+            #filter-fab {
+                position: absolute;
+
+                right: 24px;
+                bottom: 24px;
+            }
         </style>
 
         <app-route
@@ -90,23 +108,20 @@
         
         <div id="list-panel">
             <paper-material elevation="2">
-                <template is="dom-repeat" items="[[_locationData.locations]]" as="location">
-                    <location-subheader header="[[cleanName(location.name)]]"
-                        available-resources="[[_availableResources(location)]]" total-resources="[[_totalResources(location)]]">
-                    </location-subheader>
-                    <template is="dom-repeat" items="[[location.resources]]" as="resource" filter="_filterResource">
-                        <paper-icon-item>
-                            <div class$="avatar [[_colourAvatar(resource)]]" item-icon></div>
-                            <paper-item-body class="default-cursor" two-line>
-                                <div>[[resource.name]]</div>
-                                <div secondary>X minutes remaining</div>
-                            </paper-item-body>
-                            <paper-icon-button icon="add-circle" alt="make a booking">
-                            </paper-icon-button>    
-                        </paper-icon-item>
-                    </template>
+                <template id="resource-repeat" is="dom-repeat" items="[[_resources]]" as="resource" filter="_filterResource">
+                    <paper-icon-item>
+                        <div class$="avatar [[_colourAvatar(resource)]]" item-icon></div>
+                        <paper-item-body class="default-cursor" two-line>
+                            <div>[[resource.name]]</div>
+                            <div secondary>X minutes remaining</div>
+                        </paper-item-body>
+                        <paper-icon-button icon="add-circle" alt="make a booking">
+                        </paper-icon-button>    
+                    </paper-icon-item>
                 </template>
             </paper-material>
+
+            <paper-fab id="filter-fab" icon="filter-list" title="Filter List" on-tap="_tapFilterBtn"></paper-fab>
         </div>
 
         <div id="info-panel">
@@ -128,6 +143,13 @@
                 },
                 _locationData: {
                     type: Object
+                },
+                _filterOn: {
+                    type: Boolean,
+                    value: false
+                },
+                _resources: {
+                    type: Array
                 }
             },
 
@@ -136,11 +158,16 @@
                 if (!data) {
                     return;
                 }
+                var resources = [];
                 for (var i = 0; i < data.length; i++) {
                     if (String(data[i].id) === this.routeData.siteId) {
-                        this._locationData = data[i];
+                        for (var l = 0; l < data[i].locations.length; l++) {
+                            Array.prototype.push.apply(resources, data[i].locations[l].resources);
+                        }
+                        break;
                     }
                 }
+                this._resources = resources;
             },
 
             _availableResources: function(location) {
@@ -152,7 +179,7 @@
             },
 
             _filterResource: function(resource) {
-                return true || resource.state === 'AVAILABLE';
+                return !this._filterOn || resource.state === 'AVAILABLE';
             },
 
             _colourAvatar: function(resource) {
@@ -177,6 +204,17 @@
                 }
 
                 return name;
+            },
+
+            _tapFilterBtn: function(e) {
+                if (this._filterOn) {
+                    console.log('Filtering now off');
+                    this._filterOn = false;
+                } else {
+                    console.log("Filter is now on");
+                    this._filterOn = true;
+                }
+                this.$$('#resource-repeat').render();
             }
         });
     </script>
