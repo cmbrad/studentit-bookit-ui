@@ -17,6 +17,7 @@
 
 <link rel="import" href="../home-view/home-view.html">
 <link rel="import" href="../location-view/location-view.html">
+<link rel="import" href="../nearby-view/nearby-view.html">
 <link rel="import" href="../summary-view/summary-view.html">
 
 <link rel="import" href="../../bower_components/neon-animation/neon-animated-pages.html">
@@ -61,8 +62,8 @@
 			tail="{{subRoute}}"></app-route>
 		<app-route
 			route="{{subRoute}}"
-			pattern="/:siteId"
-			data="{{locationRouteData}}"	></app-route>
+			pattern="/:subPattern"
+			data="{{subRouteData}}"	></app-route>
 
 
 		<bookit-data id="bookit-data"></bookit-data>
@@ -77,8 +78,9 @@
 
 				<neon-animated-pages id="pages" selected="[[routeData.view]]" attr-for-selected="name" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
 					<home-view name="" route="{{route}}" state-data="[[stateData]]"></home-view>
-					<location-view name="location" site-id="[[locationRouteData.siteId]]" state-data="[[stateData]]"></location-view>
-					<summary-view name="summary" state-data="[[stateData]]"</summary-view>
+					<location-view name="location" site-id="[[subRouteData.subPattern]]" state-data="[[stateData]]"></location-view>
+					<summary-view name="summary" state-data="[[stateData]]"></summary-view>
+					<nearby-view name="nearby" state-data="[[stateData]]" resource-type="[[subRouteData.subPattern]]"></nearby-view>
 				</neon-animated-pages>
 			</paper-header-panel>
 		</paper-drawer-panel>
@@ -94,8 +96,7 @@
 
       ready: function() {
         this.$$("#bookit-data").addEventListener('state-data-updated', function(e) {
-          console.log('Received updated state data');
-					console.log(e.detail.data);
+					console.log('Received updated state data', e.detail.data);
 		  		this.stateData = e.detail.data;
         }.bind(this));
 

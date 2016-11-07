@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+<dom-module id="nearby-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            iron-list {
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+
+        <iron-list id="nearby-list" items="[[_resources]]" as="resource">
+            <template>
+                <paper-item>
+                    [[resource.name]]
+                </paper-item>
+            </template>
+        </iron-list>
+    </template>
+    <script>
+        Polymer({
+            is: 'nearby-view',
+
+            properties: {
+                stateData: {
+                    type: Array,
+                    observer: '_stateDataChanged'
+                },
+                resourceType: {
+                    type: String,
+                    observer: '_resourceTypeChanged'
+                },
+                _resources: {
+                    type: Array
+                }
+            },
+
+            _resourceTypeChanged: function() {
+                this._stateDataChanged(this.stateData);
+            },
+
+            _stateDataChanged: function(stateData) {
+                var resources = [];
+                for (var s = 0; s < stateData.length; s++) {
+                    var site = stateData[s];
+
+                    for (var l = 0; l < site.locations.length; l++) {
+                        var location = site.locations[l];
+
+                        if (location.name.indexOf(this.resourceType) >= 0) {
+                            for (var r = 0; r < location.resources.length; r++) {
+                                var resource = location.resources[r];
+
+                                if (resource.state === 'AVAILABLE') {
+                                    resources.push({
+                                        name: resource.name,
+                                        site: site.name
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                }
+                this._resources = resources;
+            }
+        });
+    </script>
+</dom-module>

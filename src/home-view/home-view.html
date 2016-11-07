@@ -75,10 +75,10 @@
 		<iron-media-query query="(max-width: 926px)" query-matches="{{paddingCollapsed}}"></iron-media-query>
 
 		<div class="actions-container">
-			<action-card image="../../img/action/computers.jpg" heading="Nearby Computers"></action-card>
-			<action-card image="../../img/action/project_room.jpg" heading="Nearby Project Rooms"></action-card>
-			<action-card image="../../img/action/bookit.jpg" heading="BookIT"></action-card>
-			<action-card image="../../img/action/studentit.jpg" heading="StudentIT"></action-card>
+			<action-card image="../../img/action/computers.jpg" heading="Nearby Computers" link="/nearby/"></action-card>
+			<action-card image="../../img/action/project_room.jpg" heading="Nearby Project Rooms" link="/nearby/Room"></action-card>
+			<action-card image="../../img/action/bookit.jpg" heading="BookIT" link="http://bookit.unimelb.edu.au/"></action-card>
+			<action-card image="../../img/action/studentit.jpg" heading="StudentIT" link="http://studentit.unimelb.edu.au"></action-card>
 		</div>
 
 		<h3 class="locations-heading" hidden$="[[paddingCollapsed]]">Locations</h3>
@@ -141,8 +141,6 @@
 				var width = 230;
 				var height = 160;
 
-				console.log(window.innerWidth);
-
 				var outerPadding = this.paddingCollapsed ? 12 : 96;
 				// Add 6 for margin between cards
 				var extra = this.calcCardSize(window.innerWidth, outerPadding, width + 6);
@@ -150,8 +148,6 @@
 				var totalWidth = width + extra;
 				var totalHeight = height;
 
-				console.log(totalWidth);
-				
 				this.style.width = 'auto';
 				this.customStyle['--paper-card-header-image'] = 'width: ' + String(totalWidth) + 'px; height: ' + String(totalHeight) + 'px; filter: brightness(60%);';
 

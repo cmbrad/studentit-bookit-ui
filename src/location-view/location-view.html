@@ -125,7 +125,7 @@
         </div>
 
         <div id="info-panel">
-            <location-map></location-map>
+            <location-map map-file="[[_mapFile]]" level="1"></location-map>
         </div>
     </template>
 
@@ -157,7 +157,17 @@
                 },
                 _resources: {
                     type: Array
+                },
+                _mapFile: {
+                    type: String
                 }
+            },
+
+            _getMapFileName: function(siteId) {
+                var siteIdToMapDict = {
+                    7: 'eastern_resource_center.svg'
+                };
+                return siteId in siteIdToMapDict ? siteIdToMapDict[siteId] : 'unknown.svg';
             },
 
             _updateLocationData: function() {
@@ -174,20 +184,13 @@
                         break;
                     }
                 }
+
                 this._resources = resources;
-            },
-
-            _availableResources: function(location) {
-                return location.available_computers + location.available_rooms;
-            },
-
-            _totalResources: function(location) {
-                return location.total_computers + location.total_rooms;
+                this._mapFile = this._getMapFileName(this.siteId);
             },
 
             _filterResources: function(resources) {
                 return resources.filter(function(resource) {
-                    console.log(this._filterOn);
                     return !this._filterOn || resource.state === 'AVAILABLE';
                 }.bind(this));
             },
@@ -206,14 +209,6 @@
                 }
                 
                 return state in stateDict ? stateDict[state] : 'unknown';
-            },
-
-            cleanName: function(name) {
-                if (name[0] === ':') {
-                    name = name.substring(1);
-                }
-
-                return name;
             },
 
             _tapFilterBtn: function(e) {
