@@ -33,7 +33,7 @@
 				display: inline;
 				box-sizing: border-box;
 			}
-
+			
 			::-webkit-scrollbar {
 				width: 0px;
 				height: 0px;
@@ -46,7 +46,7 @@
 				height: 100%;
 				width: 100%;
 			}
-
+			
 			#header-text {
 				font-size: 20px;
 				font-weight: 400;
@@ -55,15 +55,8 @@
 		</style>
 
 		<app-location route="{{route}}"></app-location>
-		<app-route
-			route="{{route}}"
-			pattern="/:view"
-			data="{{routeData}}"	
-			tail="{{subRoute}}"></app-route>
-		<app-route
-			route="{{subRoute}}"
-			pattern="/:subPattern"
-			data="{{subRouteData}}"	></app-route>
+		<app-route route="{{route}}" pattern="/:view" data="{{routeData}}" tail="{{subRoute}}"></app-route>
+		<app-route route="{{subRoute}}" pattern="/:subPattern" data="{{subRouteData}}"></app-route>
 
 
 		<bookit-data id="bookit-data"></bookit-data>
@@ -76,7 +69,8 @@
 					<div id="header-text" class="flex">FindIT</div>
 				</paper-toolbar>
 
-				<neon-animated-pages id="pages" selected="[[routeData.view]]" attr-for-selected="name" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+				<neon-animated-pages id="pages" selected="[[routeData.view]]" attr-for-selected="name" entry-animation="slide-from-right-animation"
+					exit-animation="slide-left-animation">
 					<home-view name="" route="{{route}}" state-data="[[stateData]]"></home-view>
 					<location-view name="location" site-id="[[subRouteData.subPattern]]" state-data="[[stateData]]"></location-view>
 					<summary-view name="summary" state-data="[[stateData]]"></summary-view>
@@ -91,24 +85,24 @@
 	</template>
 
 	<script>
-    Polymer({
-      is: 'findit-app',
+		Polymer({
+			is: 'findit-app',
 
-      ready: function() {
-        this.$$("#bookit-data").addEventListener('state-data-updated', function(e) {
+			ready: function() {
+				this.$$("#bookit-data").addEventListener('state-data-updated', function(e) {
 					console.log('Received updated state data', e.detail.data);
-		  		this.stateData = e.detail.data;
-        }.bind(this));
+					this.stateData = e.detail.data;
+				}.bind(this));
 
 				this.$$("#bookit-data").set("enabled", true);
-      },
+			},
 
-      properties: {
-        stateData: {
-          type: Array,
-          notify: true
-        }
-      }
-    });
-  </script>
+			properties: {
+				stateData: {
+					type: Array,
+					notify: true
+				}
+			}
+		});
+	</script>
 </dom-module>

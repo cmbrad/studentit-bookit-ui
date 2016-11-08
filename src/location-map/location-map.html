@@ -1,16 +1,27 @@
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="location-map">
     <template>
         <style>
             :host {
+                display: block;
+
+                width: 100%;
+                height: 100%;
+            }
+
+            #loading-container {
                 display: flex;
                 justify-content: center;
                 align-items: center;
 
-                height: 100%;
                 width: 100%;
+                height: 100%;
+            }
 
-                cursor: default;
+            #loading-container paper-spinner {
+                width: 60px;
+                height: 60px;
             }
 
             #map-canvas {
@@ -19,14 +30,28 @@
             }
         </style>
 
-        <canvas id="map-canvas"></canvas>   
+        <div id="loading-container" hidden$="[[!_loading]]">
+            <paper-spinner active></paper-spinner>
+        </div>
+        <canvas id="map-canvas" hidden$="[[_loading]]"></canvas>  
     </template>
     <script>
         Polymer({
             is: 'location-map',
 
             ready: function() {
-                this._initMap('map-canvas');
+                window.addEventListener('resize', function(e) {
+					this._resizeCanvas(this.offsetWidth, this.offsetHeight);
+				}.bind(this));
+
+                this.async(function() {
+                    this._initMap('map-canvas');
+                });
+
+                setTimeout(function() {
+                    console.log('Yeah');
+                    this._loading = true;
+                }.bind(this), 2000);
             },
 
             properties: {
@@ -46,16 +71,60 @@
                 },
                 _context: {
                     type: Object
+                },
+                _requestAnimFrame: {
+                    type: Object
+                },
+                _loading: {
+                    type: Boolean,
+                    value: false
                 }
             },
 
             _initMap: function(divId) {
                 this._canvas = this.$$("#map-canvas");
                 this._context = this._canvas.getContext("2d");
+
+                this._resizeCanvas(this.offsetWidth, this.offsetHeight);
+
+                window.requestAnimationFrame(this._draw.bind(this));
+            },
+
+            _resizeCanvas: function(width, height) {
+                if (!this._canvas) {
+                    return;
+                }
+                this._canvas.width = width;
+                this._canvas.height = height;
             },
             
             _mapChanged: function(mapFile) {
                 console.log(mapFile);
+            },
+
+            _draw: function() {
+                // Clear canvas for redrawing
+                this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+
+                this._drawBackground();
+
+                // Just keep drawing, just keep drawing... just keep drawing
+                window.requestAnimationFrame(this._draw.bind(this));
+            },
+
+            _drawBackground: function() {
+                if (!this.mapFile) {
+                    return;
+                }
+
+                var context = this._context;
+                context.beginPath();
+                context.arc(50, 50, 20, 0, 2 * Math.PI, false);
+                context.fill();
+                context.lineWidth = 2;
+                context.strokeStyle = '#000000';
+                context.stroke();
+                context.closePath();
             },
 
             _levelChanged: function(level) {
